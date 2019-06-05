@@ -22,7 +22,7 @@ class PubSubApplication {
     @Service
     @MessagingGateway(defaultRequestChannel = "pubsubOutputChannel")
     interface PubsubOutboundGateway {
-        fun sendToPubsub(text: String)
+        fun sendToPubsub(text: String, keys: Map<String, String>)
     }
 
 }

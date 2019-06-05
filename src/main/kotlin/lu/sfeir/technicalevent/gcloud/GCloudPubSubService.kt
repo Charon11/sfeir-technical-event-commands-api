@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 @Component
 class GCloudPubSubService(private val pubsubOutboundGateway: PubSubApplication.PubsubOutboundGateway) {
 
-    fun sendMessage(message: Any) {
+    fun sendMessage(message: Any, keys: Map<String, String>) {
         val jsonString = GsonConverter.toJson(message)
-        pubsubOutboundGateway.sendToPubsub(jsonString)
+        pubsubOutboundGateway.sendToPubsub(jsonString, keys)
     }
 }

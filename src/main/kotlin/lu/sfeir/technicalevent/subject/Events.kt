@@ -13,8 +13,18 @@ abstract class Events {
     val id: String = UUID.randomUUID().toString()
     val _ts: Instant = Instant.now()
     abstract val entityId: String
+    abstract val _kind: String
 
 }
 
 @Repository
 interface EventsRepository : ReactiveCrudRepository<Events, String>
+
+object EventKind {
+    const val ACCEPTED = "accepted"
+    const val CREATED = "created"
+    const val REFUSED = "refused"
+    const val DELETED = "deleted"
+    const val DESCRIPTION_CHANGED = "descriptionChanged"
+    const val TITLE_CHANGED = "titleChanged"
+}
