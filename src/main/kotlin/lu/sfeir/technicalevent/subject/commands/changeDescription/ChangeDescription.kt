@@ -5,6 +5,7 @@ import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
 import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 data class DescriptionChangedEvent(val description: String,
@@ -13,10 +14,11 @@ data class DescriptionChangedEvent(val description: String,
 
 data class ChangeDescriptionCommand(val description: String)
 
-@Component
+@Service
 class ChangeDescription(private val gCloudPubSubService: GCloudPubSubService) {
-    fun changeDescription(entityId: String, changeDescriptionCommand: ChangeDescriptionCommand): Mono<DescriptionChangedEvent> {
-        return Mono.just(DescriptionChangedEvent(description = changeDescriptionCommand.description, entityId = entityId))
-            .doOnSuccess { t -> gCloudPubSubService.sendMessage(t, ImmutableMap.of("_kind", EventKind.DESCRIPTION_CHANGED)) }
+    fun changeDescription(entityId: String, changeDescriptionCommand: ChangeDescriptionCommand): DescriptionChangedEvent {
+        val descriptionChangedEvent = DescriptionChangedEvent(description = changeDescriptionCommand.description, entityId = entityId)
+        gCloudPubSubService.sendMessage(descriptionChangedEvent, ImmutableMap.of("_kind", EventKind.DESCRIPTION_CHANGED))
+        return descriptionChangedEvent
     }
 }

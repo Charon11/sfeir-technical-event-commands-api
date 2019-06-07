@@ -6,16 +6,18 @@ import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
 import lu.sfeir.technicalevent.subject.SubjectStatus
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 data class AcceptedEvent(val status: String,
                          override val entityId: String,
                          override val _kind: String = EventKind.ACCEPTED) : Events()
 
-@Component
+@Service
 class Accept(private val gCloudPubSubService: GCloudPubSubService) {
-    fun accept(entityId: String): Mono<AcceptedEvent> {
-        return Mono.just(AcceptedEvent(SubjectStatus.ACCEPTED, entityId = entityId))
-                .doOnSuccess { t -> gCloudPubSubService.sendMessage(t, ImmutableMap.of("_kind", EventKind.ACCEPTED)) }
+    fun accept(entityId: String): AcceptedEvent {
+        val accept = AcceptedEvent(SubjectStatus.ACCEPTED, entityId = entityId)
+        gCloudPubSubService.sendMessage(accept, ImmutableMap.of("_kind", EventKind.ACCEPTED))
+        return accept
     }
 }

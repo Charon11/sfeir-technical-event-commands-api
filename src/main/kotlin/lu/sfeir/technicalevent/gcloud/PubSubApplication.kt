@@ -19,7 +19,7 @@ class PubSubApplication {
         return PubSubMessageHandler(pubsubTemplate, "subject-events")
     }
 
-    @Service
+    @Component
     @MessagingGateway(defaultRequestChannel = "pubsubOutputChannel")
     interface PubsubOutboundGateway {
         fun sendToPubsub(text: String, keys: Map<String, String>)
