@@ -39,7 +39,7 @@ class SubjectController(private val create: Create,
     fun refuse(@PathVariable id: String): RefusedEvent {
         return refuse.refuse(id)
     }
-    @DeleteMapping("/subjects/{id}/delete")
+    @PutMapping("/subjects/{id}/delete")
     fun delete(@PathVariable id: String): DeletedEvent {
         return delete.delete(id)
     }
