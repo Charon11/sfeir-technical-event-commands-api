@@ -1,14 +1,13 @@
 package lu.sfeir.technicalevent
 
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.GetMapping
-
+import org.springframework.web.bind.annotation.RequestMapping
 
 
 @RestController
 class AdminController {
-    @GetMapping("/")
+    @RequestMapping("/")
     fun hello(): String {
-        return "Hello to Sfeir Technical Events"
+        return "redirect:swagger-ui.html"
     }
 }
