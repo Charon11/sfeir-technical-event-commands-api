@@ -10,6 +10,7 @@ class SubjectRouting {
 
     @Bean
     fun subjectRouter(subjectCommandHandler: SubjectEventHandler) = router {
+        GET("/_ah/health", subjectCommandHandler::hc)
         ("/subject" and accept(MediaType.APPLICATION_JSON)).nest {
             POST("/", subjectCommandHandler::add)
             PUT("/{id}/change-description", subjectCommandHandler::changeDescription)

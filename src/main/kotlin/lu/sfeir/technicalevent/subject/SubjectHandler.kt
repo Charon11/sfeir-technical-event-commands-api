@@ -24,6 +24,11 @@ class SubjectEventHandler(private val create: Create,
                           private val delete: Delete,
                           private val refuse: Refuse,
                           private val changeTitle: ChangeTitle) {
+
+    fun hc(request: ServerRequest): Mono<ServerResponse>  {
+        return ok().body(Mono.just("up"))
+    }
+
     fun add(request: ServerRequest): Mono<ServerResponse> {
         val subject = request.bodyToMono<CreateCommand>()
         return subject.flatMap { s -> ok().body(create.create(s)) }

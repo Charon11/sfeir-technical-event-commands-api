@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap
 import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
 import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
-import lu.sfeir.technicalevent.subject.EventsRepository
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
@@ -15,10 +14,9 @@ data class TitleChangedEvent(val title: String,
 data class ChangeTitleCommand(val title: String)
 
 @Component
-class ChangeTitle(private val eventsRepository: EventsRepository,
-                  private val gCloudPubSubService: GCloudPubSubService) {
+class ChangeTitle(private val gCloudPubSubService: GCloudPubSubService) {
     fun changeTitle(entityId: String, changeTitleCommand: ChangeTitleCommand): Mono<TitleChangedEvent> {
-        val result = eventsRepository.save(TitleChangedEvent(title = changeTitleCommand.title, entityId = entityId))
-        return result.doOnSuccess { t -> gCloudPubSubService.sendMessage(t, ImmutableMap.of("_kind", EventKind.TITLE_CHANGED)) }
+        return Mono.just(TitleChangedEvent(title = changeTitleCommand.title, entityId = entityId))
+                .doOnSuccess { t -> gCloudPubSubService.sendMessage(t, ImmutableMap.of("_kind", EventKind.TITLE_CHANGED)) }
     }
 }
