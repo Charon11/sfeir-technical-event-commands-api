@@ -1,4 +1,4 @@
-package lu.sfeir.technicalevent.subject.commands.refused
+package lu.sfeir.technicalevent.subject.commands
 
 import com.google.common.collect.ImmutableMap
 import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
@@ -15,7 +15,7 @@ data class RefusedEvent(val status: String,
 class Refuse(private val gCloudPubSubService: GCloudPubSubService) {
     fun refuse(entityId: String): RefusedEvent {
         val refusedEvent = RefusedEvent(SubjectStatus.REFUSED, entityId = entityId)
-        gCloudPubSubService.sendMessage(refusedEvent, ImmutableMap.of("_kind", EventKind.REFUSED))
+        gCloudPubSubService.sendMessage(refusedEvent, ImmutableMap.of("_kind", refusedEvent._kind))
         return refusedEvent
     }
 }

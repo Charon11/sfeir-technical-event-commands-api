@@ -1,13 +1,11 @@
-package lu.sfeir.technicalevent.subject.commands.create
+package lu.sfeir.technicalevent.subject.commands
 
 import com.google.common.collect.ImmutableMap
 import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
 import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
 import lu.sfeir.technicalevent.subject.SubjectStatus
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 import java.util.*
 
 data class CreatedEvent(val title: String,
@@ -23,8 +21,8 @@ data class CreateCommand(val title: String,
 @Service
 class Create(private val gCloudPubSubService: GCloudPubSubService) {
     fun create(createCommand: CreateCommand): CreatedEvent {
-        val createdEvent =CreatedEvent(title = createCommand.title, description = createCommand.description)
-        gCloudPubSubService.sendMessage(createdEvent, ImmutableMap.of("_kind", EventKind.CREATED))
+        val createdEvent = CreatedEvent(title = createCommand.title, description = createCommand.description)
+        gCloudPubSubService.sendMessage(createdEvent, ImmutableMap.of("_kind", createdEvent._kind))
         return createdEvent
     }
 }

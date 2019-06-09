@@ -1,12 +1,10 @@
-package lu.sfeir.technicalevent.subject.commands.changeDescription
+package lu.sfeir.technicalevent.subject.commands
 
 import com.google.common.collect.ImmutableMap
 import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
 import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 
 data class DescriptionChangedEvent(val description: String,
                                    override val entityId: String,
@@ -18,7 +16,7 @@ data class ChangeDescriptionCommand(val description: String)
 class ChangeDescription(private val gCloudPubSubService: GCloudPubSubService) {
     fun changeDescription(entityId: String, changeDescriptionCommand: ChangeDescriptionCommand): DescriptionChangedEvent {
         val descriptionChangedEvent = DescriptionChangedEvent(description = changeDescriptionCommand.description, entityId = entityId)
-        gCloudPubSubService.sendMessage(descriptionChangedEvent, ImmutableMap.of("_kind", EventKind.DESCRIPTION_CHANGED))
+        gCloudPubSubService.sendMessage(descriptionChangedEvent, ImmutableMap.of("_kind", descriptionChangedEvent._kind))
         return descriptionChangedEvent
     }
 }

@@ -1,12 +1,10 @@
-package lu.sfeir.technicalevent.subject.commands.changeTitle
+package lu.sfeir.technicalevent.subject.commands
 
 import com.google.common.collect.ImmutableMap
 import lu.sfeir.technicalevent.gcloud.GCloudPubSubService
 import lu.sfeir.technicalevent.subject.EventKind
 import lu.sfeir.technicalevent.subject.Events
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 
 data class TitleChangedEvent(val title: String,
                              override val entityId: String,
@@ -18,7 +16,7 @@ data class ChangeTitleCommand(val title: String)
 class ChangeTitle(private val gCloudPubSubService: GCloudPubSubService) {
     fun changeTitle(entityId: String, changeTitleCommand: ChangeTitleCommand): TitleChangedEvent {
         val titleChangedEvent = TitleChangedEvent(title = changeTitleCommand.title, entityId = entityId)
-        gCloudPubSubService.sendMessage(titleChangedEvent, ImmutableMap.of("_kind", EventKind.TITLE_CHANGED))
+        gCloudPubSubService.sendMessage(titleChangedEvent, ImmutableMap.of("_kind", titleChangedEvent._kind))
         return titleChangedEvent
     }
 }

@@ -18,5 +18,6 @@ object EventKind {
     const val REFUSED = "refused"
     const val DELETED = "deleted"
     const val DESCRIPTION_CHANGED = "descriptionChanged"
+    const val SCHEDULES_CHANGED = "schedulesChanged"
     const val TITLE_CHANGED = "titleChanged"
 }

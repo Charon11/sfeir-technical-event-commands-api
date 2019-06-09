@@ -1,25 +1,12 @@
 package lu.sfeir.technicalevent.subject
 
-import lu.sfeir.technicalevent.subject.commands.accept.Accept
-import lu.sfeir.technicalevent.subject.commands.accept.AcceptedEvent
-import lu.sfeir.technicalevent.subject.commands.changeDescription.ChangeDescription
-import lu.sfeir.technicalevent.subject.commands.changeDescription.ChangeDescriptionCommand
-import lu.sfeir.technicalevent.subject.commands.changeDescription.DescriptionChangedEvent
-import lu.sfeir.technicalevent.subject.commands.changeTitle.ChangeTitle
-import lu.sfeir.technicalevent.subject.commands.changeTitle.ChangeTitleCommand
-import lu.sfeir.technicalevent.subject.commands.changeTitle.TitleChangedEvent
-import lu.sfeir.technicalevent.subject.commands.create.Create
-import lu.sfeir.technicalevent.subject.commands.create.CreateCommand
-import lu.sfeir.technicalevent.subject.commands.create.CreatedEvent
-import lu.sfeir.technicalevent.subject.commands.delete.Delete
-import lu.sfeir.technicalevent.subject.commands.delete.DeletedEvent
-import lu.sfeir.technicalevent.subject.commands.refused.Refuse
-import lu.sfeir.technicalevent.subject.commands.refused.RefusedEvent
+import lu.sfeir.technicalevent.subject.commands.*
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class SubjectController(private val create: Create,
                         private val changeDescription: ChangeDescription,
+                        private val changeSchedules: ChangeSchedule,
                         private val accept: Accept,
                         private val delete: Delete,
                         private val refuse: Refuse,
@@ -51,6 +38,11 @@ class SubjectController(private val create: Create,
     @PutMapping("/subjects/{id}/change-description")
     fun changeDescription(@PathVariable id: String, @RequestBody changeDescriptionCommand: ChangeDescriptionCommand): DescriptionChangedEvent {
         return changeDescription.changeDescription(id, changeDescriptionCommand)
+    }
+
+    @PutMapping("/subjects/{id}/change-schedules")
+    fun changeSchedules(@PathVariable id: String, @RequestBody changeSchedulesCommand: ChangeSchedulesCommand): ScheduleChangedEvent {
+        return changeSchedules.changeSchedules(id, changeSchedulesCommand)
     }
 
 }
