@@ -5,6 +5,7 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.tasks.Task
+import com.google.firebase.tasks.Tasks
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
@@ -32,7 +33,11 @@ class FirebaseAuthentication(firebaseConfig: FirebaseConfig) {
     private val firebaseApp = FirebaseApp.initializeApp(options)
 
     @Throws(InterruptedException::class, ExecutionException::class)
-    fun verifyIdToken(idToken: String): Task<FirebaseToken> {
-        return FirebaseAuth.getInstance().verifyIdToken(idToken)
+    fun verifyIdToken(idToken: String): FirebaseToken {
+        return Tasks.await(FirebaseAuth.getInstance().verifyIdToken(idToken))
+    }
+
+    fun generateToken(uid: String): String {
+        return Tasks.await(FirebaseAuth.getInstance().createCustomToken(uid))
     }
 }

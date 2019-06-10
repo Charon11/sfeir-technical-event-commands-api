@@ -1,12 +1,14 @@
 package lu.sfeir.technicalevent.subject
 
 import com.google.firebase.auth.FirebaseToken
+import com.google.firebase.tasks.Tasks
 import lu.sfeir.technicalevent.firebase.FirebaseAuthentication
 import lu.sfeir.technicalevent.subject.commands.*
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
-import java.util.*
+import reactor.core.publisher.toMono
+import reactor.core.publisher.whenComplete
 
 @RestController
 class SubjectController(private val firebaseAuthentication: FirebaseAuthentication,
@@ -19,8 +21,13 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
                         private val changeTitle: ChangeTitle) {
 
     @GetMapping("/auth")
-    fun auth(@RequestHeader(value = "Authorization", required=false) token: String?): String {
+    fun auth(@RequestHeader(value = "Authorization", required = false) token: String?): String {
         return authenticated(token).name
+    }
+
+    @GetMapping("/token/{uid}")
+    fun token(@PathVariable uid: String): String {
+        return firebaseAuthentication.generateToken(uid)
     }
 
     @PostMapping("/subjects")
@@ -61,9 +68,6 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
     @Throws(HttpClientErrorException::class)
     fun authenticated(token: String?): FirebaseToken {
         if (token.isNullOrEmpty()) throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
-        val firebaseToken = firebaseAuthentication.verifyIdToken(token.toString().removePrefix("Bearer "))
-        if (firebaseToken.isSuccessful) return firebaseToken.result
-        else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
+        return firebaseAuthentication.verifyIdToken(token.toString().removePrefix("Bearer "))
     }
-
 }
