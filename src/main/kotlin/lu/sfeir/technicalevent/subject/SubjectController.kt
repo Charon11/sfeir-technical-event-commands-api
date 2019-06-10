@@ -29,8 +29,8 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
     }
 
     @PutMapping("/subjects/{id}/accept")
-    fun accept(@PathVariable id: String): Events {
-        return accept.accept(id)
+    fun accept(@PathVariable id: String, @RequestBody acceptCommand: AcceptCommand): Events {
+        return accept.accept(id, acceptCommand)
     }
 
     @PutMapping("/subjects/{id}/refuse")
