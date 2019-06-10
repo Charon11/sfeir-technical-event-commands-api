@@ -71,6 +71,13 @@
             <artifactId>gson-javatime-serialisers</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
 
     </dependencies>
 

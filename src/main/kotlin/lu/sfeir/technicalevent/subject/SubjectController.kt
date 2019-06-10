@@ -1,10 +1,16 @@
 package lu.sfeir.technicalevent.subject
 
+import com.google.firebase.auth.FirebaseToken
+import lu.sfeir.technicalevent.firebase.FirebaseAuthentication
 import lu.sfeir.technicalevent.subject.commands.*
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpClientErrorException
+import java.util.*
 
 @RestController
-class SubjectController(private val create: Create,
+class SubjectController(private val firebaseAuthentication: FirebaseAuthentication,
+                        private val create: Create,
                         private val changeDescription: ChangeDescription,
                         private val changeSchedules: ChangeSchedule,
                         private val accept: Accept,
@@ -12,13 +18,18 @@ class SubjectController(private val create: Create,
                         private val refuse: Refuse,
                         private val changeTitle: ChangeTitle) {
 
+    @GetMapping("/auth")
+    fun auth(@RequestHeader(value = "Authorization", required=false) token: String?): String {
+        return authenticated(token).name
+    }
+
     @PostMapping("/subjects")
     fun add(@RequestBody createCommand: CreateCommand): CreatedEvent {
         return create.create(createCommand)
     }
 
     @PutMapping("/subjects/{id}/accept")
-    fun accept(@PathVariable id: String): AcceptedEvent {
+    fun accept(@PathVariable id: String): Events {
         return accept.accept(id)
     }
 
@@ -26,10 +37,12 @@ class SubjectController(private val create: Create,
     fun refuse(@PathVariable id: String): RefusedEvent {
         return refuse.refuse(id)
     }
+
     @PutMapping("/subjects/{id}/delete")
     fun delete(@PathVariable id: String): DeletedEvent {
         return delete.delete(id)
     }
+
     @PutMapping("/subjects/{id}/change-title")
     fun changeTitle(@PathVariable id: String, @RequestBody changeTitleCommand: ChangeTitleCommand): TitleChangedEvent {
         return changeTitle.changeTitle(id, changeTitleCommand)
@@ -43,6 +56,14 @@ class SubjectController(private val create: Create,
     @PutMapping("/subjects/{id}/change-schedules")
     fun changeSchedules(@PathVariable id: String, @RequestBody changeSchedulesCommand: ChangeSchedulesCommand): ScheduleChangedEvent {
         return changeSchedules.changeSchedules(id, changeSchedulesCommand)
+    }
+
+    @Throws(HttpClientErrorException::class)
+    fun authenticated(token: String?): FirebaseToken {
+        if (token.isNullOrEmpty()) throw HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        val firebaseToken = firebaseAuthentication.verifyIdToken(token.toString().removePrefix("Bearer "))
+        if (firebaseToken.isSuccessful) return firebaseToken.result
+        else throw HttpClientErrorException(HttpStatus.FORBIDDEN)
     }
 
 }
