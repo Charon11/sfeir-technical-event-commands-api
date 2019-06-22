@@ -25,44 +25,39 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
         return authenticated(token).name
     }
 
-    @GetMapping("/token/{uid}")
-    fun token(@PathVariable uid: String): String {
-        return firebaseAuthentication.generateToken(uid)
-    }
-
     @PostMapping("/subjects")
-    fun add(@RequestBody createCommand: CreateCommand): CreatedEvent {
-        return create.create(createCommand)
+    fun add(@RequestHeader(value = "Authorization", required = false) token: String?, @RequestBody createCommand: CreateCommand): CreatedEvent {
+        return create.create(createCommand, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/accept")
-    fun accept(@PathVariable id: String, @RequestBody acceptCommand: AcceptCommand): Events {
-        return accept.accept(id, acceptCommand)
+    fun accept(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody acceptCommand: AcceptCommand): Events {
+        return accept.accept(id, acceptCommand, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/refuse")
-    fun refuse(@PathVariable id: String): RefusedEvent {
-        return refuse.refuse(id)
+    fun refuse(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String): RefusedEvent {
+        return refuse.refuse(id, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/delete")
-    fun delete(@PathVariable id: String): DeletedEvent {
-        return delete.delete(id)
+    fun delete(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String): DeletedEvent {
+        return delete.delete(id, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/change-title")
-    fun changeTitle(@PathVariable id: String, @RequestBody changeTitleCommand: ChangeTitleCommand): TitleChangedEvent {
-        return changeTitle.changeTitle(id, changeTitleCommand)
+    fun changeTitle(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeTitleCommand: ChangeTitleCommand): TitleChangedEvent {
+        return changeTitle.changeTitle(id, changeTitleCommand, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/change-description")
-    fun changeDescription(@PathVariable id: String, @RequestBody changeDescriptionCommand: ChangeDescriptionCommand): DescriptionChangedEvent {
-        return changeDescription.changeDescription(id, changeDescriptionCommand)
+    fun changeDescription(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeDescriptionCommand: ChangeDescriptionCommand): DescriptionChangedEvent {
+        return changeDescription.changeDescription(id, changeDescriptionCommand, authenticated(token))
     }
 
     @PutMapping("/subjects/{id}/change-schedules")
-    fun changeSchedules(@PathVariable id: String, @RequestBody changeSchedulesCommand: ChangeSchedulesCommand): ScheduleChangedEvent {
-        return changeSchedules.changeSchedules(id, changeSchedulesCommand)
+    fun changeSchedules(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeSchedulesCommand: ChangeSchedulesCommand): ScheduleChangedEvent {
+        return changeSchedules.changeSchedules(id, changeSchedulesCommand, authenticated(token))
     }
 
     @Throws(HttpClientErrorException::class)

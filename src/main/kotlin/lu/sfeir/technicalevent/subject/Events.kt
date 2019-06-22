@@ -8,6 +8,7 @@ abstract class Events {
     val _ts: Instant = Instant.now()
     abstract val entityId: String
     abstract val _kind: String
+    abstract val userId: String
 
 }
 
