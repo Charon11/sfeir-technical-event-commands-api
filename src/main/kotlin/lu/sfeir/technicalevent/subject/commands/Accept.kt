@@ -8,7 +8,6 @@ import lu.sfeir.technicalevent.subject.Events
 import lu.sfeir.technicalevent.subject.SubjectStatus
 import org.springframework.stereotype.Service
 import java.time.Instant
-import javax.print.attribute.standard.JobOriginatingUserName
 
 data class AcceptedEvent(val status: String,
                          val scheduleDate: Instant,

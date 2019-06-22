@@ -18,6 +18,7 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
                         private val accept: Accept,
                         private val delete: Delete,
                         private val refuse: Refuse,
+                        private val changeType: ChangeType,
                         private val changeTitle: ChangeTitle) {
 
     @GetMapping("/auth")
@@ -58,6 +59,11 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
     @PutMapping("/subjects/{id}/change-schedules")
     fun changeSchedules(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeSchedulesCommand: ChangeSchedulesCommand): ScheduleChangedEvent {
         return changeSchedules.changeSchedules(id, changeSchedulesCommand, authenticated(token))
+    }
+
+    @PutMapping("/subjects/{id}/change-type")
+    fun changeType(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeTypeCommand: ChangeTypeCommand): TypeChangedEvent {
+        return changeType.changeType(id, changeTypeCommand, authenticated(token))
     }
 
     @Throws(HttpClientErrorException::class)
