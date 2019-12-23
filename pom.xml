@@ -131,7 +131,6 @@
                 <configuration>
                     <to>
                         <image>gcr.io/sfeirluxtechnicalevent/sfeir-event-commands</image>
-                        <credHelper>gcr</credHelper>
                     </to>
                 </configuration>
             </plugin>
