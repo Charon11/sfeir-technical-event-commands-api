@@ -35,8 +35,4 @@ class FirebaseAuthentication(firebaseConfig: FirebaseConfig) {
     fun verifyIdToken(idToken: String): FirebaseToken {
         return Tasks.await(FirebaseAuth.getInstance().verifyIdToken(idToken))
     }
-
-    fun generateToken(uid: String): String {
-        return Tasks.await(FirebaseAuth.getInstance().createCustomToken(uid))
-    }
 }

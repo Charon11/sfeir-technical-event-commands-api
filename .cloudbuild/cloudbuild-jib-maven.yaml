@@ -1,0 +1,22 @@
+substitutions:
+  _IMAGE_NAME: sfeir-event-commands
+
+steps:
+
+  - # Uses the Cloud Builder Maven image.
+    name: gcr.io/cloud-builders/mvn
+    args:
+      # Compiles the application.
+      - compile
+
+      # Runs the Jib build by using the latest version of the plugin.
+      # To use a specific version, configure the plugin in the pom.xml.
+      - com.google.cloud.tools:jib-maven-plugin:build
+      - -X
+
+      # Sets the target image reference to push to.
+      - -Dimage=gcr.io/${PROJECT_ID}/${_IMAGE_NAME}
+
+    volumes:
+      - name: user.home
+        path: /root

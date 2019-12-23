@@ -21,5 +21,6 @@ object EventKind {
     const val DESCRIPTION_CHANGED = "descriptionChanged"
     const val SCHEDULES_CHANGED = "schedulesChanged"
     const val TITLE_CHANGED = "titleChanged"
+    const val RECORD_AUTHORISATION_CHANGED = "recordAuthorisationChanged"
     const val TYPE_CHANGED = "typeChanged"
 }

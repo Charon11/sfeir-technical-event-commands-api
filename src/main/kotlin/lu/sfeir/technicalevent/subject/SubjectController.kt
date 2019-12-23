@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException
 import reactor.core.publisher.toMono
 import reactor.core.publisher.whenComplete
 
+@CrossOrigin
 @RestController
 class SubjectController(private val firebaseAuthentication: FirebaseAuthentication,
                         private val create: Create,
@@ -19,6 +20,7 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
                         private val delete: Delete,
                         private val refuse: Refuse,
                         private val changeType: ChangeType,
+                        private val changeRecordAuthorisation: ChangeRecordAuthorisation,
                         private val changeTitle: ChangeTitle) {
 
     @GetMapping("/auth")
@@ -64,6 +66,11 @@ class SubjectController(private val firebaseAuthentication: FirebaseAuthenticati
     @PutMapping("/subjects/{id}/change-type")
     fun changeType(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeTypeCommand: ChangeTypeCommand): TypeChangedEvent {
         return changeType.changeType(id, changeTypeCommand, authenticated(token))
+    }
+
+    @PutMapping("/subjects/{id}/change-record-authorisation")
+    fun changeRecordAuthorisation(@RequestHeader(value = "Authorization", required = false) token: String?, @PathVariable id: String, @RequestBody changeRecordAuthorisationCommand: ChangeRecordAuthorisationCommand): RecordAuthorisationChanged {
+        return changeRecordAuthorisation.changeRecordAuthorisation(id, changeRecordAuthorisationCommand, authenticated(token))
     }
 
     @Throws(HttpClientErrorException::class)

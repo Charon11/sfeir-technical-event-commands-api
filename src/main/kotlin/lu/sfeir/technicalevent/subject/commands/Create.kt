@@ -16,6 +16,7 @@ data class CreatedEvent(val title: String,
                         val subjectType: SubjectType,
                         val schedules: List<Instant>? = emptyList(),
                         val userName: String,
+                        val record: Boolean? = true,
                         override val entityId: String = UUID.randomUUID().toString(),
                         override val userId: String,
                         override val _kind: String = EventKind.CREATED) : Events() {
@@ -25,6 +26,7 @@ data class CreatedEvent(val title: String,
 data class CreateCommand(val title: String,
                          val description: String? = null,
                          val subjectType: SubjectType,
+                         val record: Boolean? = true,
                          val schedules: List<Instant>? = emptyList())
 
 @Service
@@ -35,6 +37,7 @@ class Create(private val gCloudPubSubService: GCloudPubSubService) {
                 description = createCommand.description,
                 subjectType = createCommand.subjectType,
                 schedules = createCommand.schedules,
+                record = createCommand.record,
                 userId = token.uid,
                 userName = token.name)
         gCloudPubSubService.sendMessage(createdEvent, ImmutableMap.of("_kind", createdEvent._kind))
