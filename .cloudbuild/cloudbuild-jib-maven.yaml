@@ -38,9 +38,10 @@ steps:
       - name: user.home
         path: /root
 
-  - # Uses the Cloud Builder Gcloud image.
+  - # Uses the Cloud Builder GCloud image.
     name: gcr.io/cloud-builders/gcloud
     args:
+      # Run the GCloud command to deploy the latest version of the project container
       - beta
       - run
       - deploy
